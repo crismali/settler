@@ -1,0 +1,39 @@
+{
+  "name": "settler",
+  "version": "0.0.0",
+  "description": "argument managers and helpers",
+  "main": "settler.js",
+  "scripts": {
+    "test": "testem"
+  },
+  "keywords": [
+    "settler",
+    "arguments"
+  ],
+  "author": "Michael Crismali",
+  "license": "Apache 2.0",
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "colors": "^0.6.2",
+    "gulp": "^3.6.2",
+    "gulp-concat": "^2.2.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^0.3.0",
+    "gulp-util": "^2.2.14",
+    "karma": "^0.12.16",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.3",
+    "karma-coverage": "^0.2.1",
+    "karma-firefox-launcher": "^0.1.3",
+    "karma-html-reporter": "^0.2.3",
+    "karma-mocha": "^0.1.3",
+    "karma-mocha-debug": "^0.1.2",
+    "karma-mocha-reporter": "^0.2.5",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-safari-launcher": "^0.1.1",
+    "karma-sinon-chai": "^0.1.5",
+    "mocha": "^1.18.2",
+    "node-inspector": "^0.7.3"
+  }
+}
