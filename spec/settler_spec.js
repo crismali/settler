@@ -31,7 +31,7 @@ describe('Settler', function() {
     it('returns a function that throws an error if the number of arguments is incorrect', function() {
       expect(function() {
         lockedFunc('foo', 'bar');
-      }).to.throw(/Expected 3 arguments, but was given 2/);
+      }).to.throw(/Expected 3 arguments, but received 2/);
     });
 
     it('executes the function when given the correct number of arguments', function() {
