@@ -3,6 +3,7 @@ describe('Settler', function() {
   var noop;
   var addTwo;
   var contextFunc;
+  var obj;
 
   beforeEach(function() {
     noop = function() {};
@@ -53,7 +54,6 @@ describe('Settler', function() {
     var multiFunction;
     var results;
     var dispatcher;
-    var obj;
 
     beforeEach(function() {
       multiFunction = Settler.multiFunction;
@@ -102,7 +102,6 @@ describe('Settler', function() {
 
   describe('optionalArgs', function() {
     var optionalArgs;
-    var obj;
 
     beforeEach(function() {
       optionalArgs = Settler.optionalArgs;
@@ -130,6 +129,33 @@ describe('Settler', function() {
 
     it('executes the function in the correct context', function() {
       obj.subject(1, 2);
+      expect(obj.worked).to.equal(true);
+    });
+  });
+
+  describe('defaultArgs', function() {
+    var defaultArgs;
+
+    beforeEach(function() {
+      defaultArgs = Settler.defaultArgs;
+      subject = defaultArgs([1, 2, 3], function(x, y, z) {
+        this.worked = true;
+        return x + y + z;
+      });
+      obj = { subject: subject };
+    });
+
+    it('uses the defaults if no arguments are provided', function() {
+      expect(subject()).to.equal(6);
+      expect(subject(2)).to.equal(7);
+      expect(subject(2, 3)).to.equal(8);
+      expect(subject(2, 3, 4)).to.equal(9);
+      expect(subject(2, 3, 4, 5)).to.equal(9);
+      expect(subject(2, undefined, 4).toString()).to.equal('NaN');
+    });
+
+    it('executes the function in the proper context', function() {
+      obj.subject();
       expect(obj.worked).to.equal(true);
     });
   });
