@@ -1,12 +1,16 @@
 describe('Settler', function() {
   var subject;
   var noop;
-  var add;
+  var addTwo;
+  var contextFunc;
 
   beforeEach(function() {
     noop = function() {};
-    add = function(x, y) {
-      return x + y;
+    addTwo = function(x) {
+      return x + 2;
+    };
+    contextFunc = function() {
+      this.worked = true;
     };
   });
 
@@ -38,12 +42,61 @@ describe('Settler', function() {
     it('executes the function in the appropriate context', function() {
       subject = {
         worked: false,
-        work: lockArgs(0, function() {
-          this.worked = true;
-        })
+        work: lockArgs(0, contextFunc)
       };
       subject.work();
       expect(subject.worked).to.equal(true);
+    });
+  });
+
+  describe('multiFunction', function() {
+    var multiFunction;
+    var results;
+    var dispatcher;
+    var obj;
+
+    beforeEach(function() {
+      multiFunction = Settler.multiFunction;
+      dispatcher = function(arg) {
+        this.lastArgType = typeof arg;
+        return this.lastArgType;
+      };
+      results = {
+        'undefined': 'foo',
+        string: function(arg) {
+          return arg.trim();
+        },
+        number: addTwo,
+        object: contextFunc
+      };
+
+      subject = multiFunction(dispatcher, results);
+      obj = { subject: subject };
+    });
+
+    it('executes the result function based on the return value of the dispatch function', function() {
+      expect(subject('   foo   ')).to.equal('foo');
+      expect(subject(2)).to.equal(4);
+    });
+
+    it('throws an error when there is no result function', function() {
+      expect(function() {
+        subject(noop);
+      }).to.throw(/Dispatch function failed to find a result/);
+    });
+
+    it('returns the result when it is not a function', function() {
+      expect(subject(undefined)).to.equal('foo');
+    });
+
+    it('executes the dispatch function in the correct context', function() {
+      obj.subject({});
+      expect(obj.lastArgType).to.equal('object');
+    });
+
+    it('executes the result function in the correct context', function() {
+      obj.subject({});
+      expect(obj.worked).to.equal(true);
     });
   });
 });
