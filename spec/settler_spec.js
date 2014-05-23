@@ -99,4 +99,38 @@ describe('Settler', function() {
       expect(obj.worked).to.equal(true);
     });
   });
+
+  describe('optionalArgs', function() {
+    var optionalArgs;
+    var obj;
+
+    beforeEach(function() {
+      optionalArgs = Settler.optionalArgs;
+      obj = { subject: optionalArgs(2, 4, contextFunc) };
+      subject = optionalArgs(2, 4, noop);
+    });
+
+    it('executes the function if the number of args is in range', function() {
+      expect(function() { subject(1, 2); } ).to.not.throw();
+      expect(function() { subject(1, 2, 3); } ).to.not.throw();
+      expect(function() { subject(1, 2, 3, 4); } ).to.not.throw();
+    });
+
+    it('throws an error if fewer args are provided than the minimum', function() {
+      expect(function() {
+        subject(1);
+      }).to.throw(/Expected 2 to 4 arguments, but received 1/);
+    });
+
+    it('throws an error if too many args are provided', function() {
+      expect(function() {
+        subject(1, 2, 3, 4, 5);
+      }).to.throw(/Expected 2 to 4 arguments, but received 5/);
+    });
+
+    it('executes the function in the correct context', function() {
+      obj.subject(1, 2);
+      expect(obj.worked).to.equal(true);
+    });
+  });
 });
