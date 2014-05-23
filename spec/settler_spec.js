@@ -159,4 +159,36 @@ describe('Settler', function() {
       expect(obj.worked).to.equal(true);
     });
   });
+
+  describe('normalizeArgs', function() {
+    var normalizeArgs;
+
+    beforeEach(function() {
+      normalizeArgs = Settler.normalizeArgs;
+      var normalizer = function() {
+        this.normalizerRan = true;
+        return [1, 2, 3];
+      };
+      var func = function(one, two, three) {
+        this.worked = true;
+        return one + two + three;
+      };
+      subject = normalizeArgs(normalizer, func);
+      obj = { subject: subject };
+    });
+
+    it('applies the results of the normalizer to the function', function() {
+      expect(subject()).to.equal(6);
+    });
+
+    it('executes the normalizer in the correct context', function() {
+      obj.subject();
+      expect(obj.normalizerRan).to.equal(true);
+    });
+
+    it('executes the function in the correct context', function() {
+      obj.subject();
+      expect(obj.worked).to.equal(true);
+    });
+  });
 });
