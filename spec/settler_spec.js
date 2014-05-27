@@ -221,4 +221,29 @@ describe('Settler', function() {
       expect(window.globalize).to.not.equal(Settler.globalize);
     });
   });
+
+  describe('arrayArgs', function() {
+    var arrayArgs;
+    var isArray;
+
+    beforeEach(function() {
+      arrayArgs = Settler.arrayArgs;
+      isArray = function(array) {
+        this.worked = true;
+        return array.constructor === Array;
+      };
+      subject = arrayArgs(isArray);
+      obj = { subject: subject };
+    });
+
+    it('calls the function with a real array of arguments (one argument)', function() {
+      expect(subject()).to.equal(true);
+      expect(subject(1, 2)).to.equal(true);
+    });
+
+    it('calls the function in the proper context', function() {
+      obj.subject();
+      expect(obj.worked).to.equal(true);
+    });
+  });
 });
