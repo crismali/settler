@@ -48,18 +48,6 @@ describe('Settler', function() {
       subject.work();
       expect(subject.worked).to.equal(true);
     });
-
-    it('throws an error if given less than 2 arguments', function() {
-      expect(function() {
-        lockArgs(1);
-      }).to.throw(/Expected 2 arguments, but received 1/);
-    });
-
-    it('throws an error if given more than 2 arguments', function() {
-      expect(function() {
-        lockArgs(1, 2, 3);
-      }).to.throw(/Expected 2 arguments, but received 3/);
-    });
   });
 
   describe('multiFunction', function() {
@@ -142,6 +130,18 @@ describe('Settler', function() {
     it('executes the function in the correct context', function() {
       obj.subject(1, 2);
       expect(obj.worked).to.equal(true);
+    });
+
+    it('throws an error if given less than 3 arguments', function() {
+      expect(function() {
+        optionalArgs(1, 2);
+      }).to.throw(/Expected 3 arguments, but received 2/);
+    });
+
+    it('throws an error if given more than 3 arguments', function() {
+      expect(function() {
+        optionalArgs(1, 2, 3, 4);
+      }).to.throw(/Expected 3 arguments, but received 4/);
     });
   });
 
