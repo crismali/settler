@@ -272,7 +272,7 @@ describe('Settler', function() {
 
     it('throws an error if there are too many arguments', function() {
       expect(function() {
-        subject(1, 2, 3, 4, 5);
+        subject(1, 2, 3, 4);
       }).to.throw();
     });
 
