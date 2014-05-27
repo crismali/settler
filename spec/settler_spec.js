@@ -247,4 +247,38 @@ describe('Settler', function() {
       expect(obj.worked).to.equal(true);
     });
   });
+
+  describe('byArgsLength', function() {
+    var byArgsLength;
+    var firstFunc;
+    var secondFunc;
+
+    beforeEach(function() {
+      byArgsLength = Settler.byArgsLength;
+      firstFunc = function() { return true; };
+      secondFunc = function() { return false; };
+      subject = byArgsLength(firstFunc, secondFunc, 'foo', contextFunc);
+      obj = { subject: subject };
+    });
+
+    it('dispatches to functions according to the length of the arguments passed in', function() {
+      expect(subject()).to.equal(true);
+      expect(subject(1)).to.equal(false);
+      expect(subject(1, 2)).to.equal('foo');
+      expect(function() {
+        subject(1, 2, 3);
+      }).to.not.throw();
+    });
+
+    it('throws an error if there are too many arguments', function() {
+      expect(function() {
+        subject(1, 2, 3, 4, 5);
+      }).to.throw();
+    });
+
+    it('executes the function in the correct context', function() {
+      obj.subject(1, 2, 3);
+      expect(obj.worked).to.equal(true);
+    });
+  });
 });
