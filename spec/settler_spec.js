@@ -336,4 +336,31 @@ describe('Settler', function() {
       expect(obj.worked).to.equal(true);
     });
   });
+
+  describe('atMost', function() {
+    var atMost;
+
+    beforeEach(function() {
+      atMost = Settler.atMost;
+      subject = atMost(2, contextFunc);
+      obj = { subject: subject };
+    });
+
+    it('throws an error if too many arguments are given', function() {
+      expect(function() {
+        subject(1, 2, 3);
+      }).to.throw(/Expected at most 2 arguments, but received 3/);
+    });
+
+    it('does not throw an error if the maximum number of arguments is given', function() {
+      expect(function() {
+        subject(1, 2);
+      }).to.not.throw();
+    });
+
+    it('executes the function in the correct context', function() {
+      obj.subject(1, 2);
+      expect(obj.worked).to.equal(true);
+    });
+  });
 });
