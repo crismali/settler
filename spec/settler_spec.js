@@ -191,4 +191,34 @@ describe('Settler', function() {
       expect(obj.worked).to.equal(true);
     });
   });
+
+  describe('globalize', function() {
+    beforeEach(function() {
+      Settler.globalize();
+    });
+
+    afterEach(function() {
+      [
+        'lockArgs',
+        'multiFunction',
+        'optionalArgs',
+        'defaultArgs',
+        'normalizeArgs'
+      ].forEach(function(methodName) {
+        delete window[methodName];
+      });
+    });
+
+    it('injects all settler functions into the global context', function() {
+      expect(window.lockArgs).to.equal(Settler.lockArgs);
+      expect(window.multiFunction).to.equal(Settler.multiFunction);
+      expect(window.optionalArgs).to.equal(Settler.optionalArgs);
+      expect(window.defaultArgs).to.equal(Settler.defaultArgs);
+      expect(window.normalizeArgs).to.equal(Settler.normalizeArgs);
+    });
+
+    it('does not inject the globalize method', function() {
+      expect(window.globalize).to.not.equal(Settler.globalize);
+    });
+  });
 });
