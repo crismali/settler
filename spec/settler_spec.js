@@ -170,6 +170,22 @@ describe('Settler', function() {
       obj.subject();
       expect(obj.worked).to.equal(true);
     });
+
+    it('invokes default functions and uses the return value', function() {
+      subject = defaultArgs([function() {
+        return { bar: 'baz' };
+      }], function(foo) {
+        return foo.bar;
+      });
+      expect(subject()).to.equal('baz');
+    });
+
+    it('invokes default functions in the appropriate context', function() {
+      subject = defaultArgs([contextFunc], addTwo);
+      obj = { subject: subject };
+      obj.subject();
+      expect(obj.worked).to.equal(true);
+    });
   });
 
   describe('normalizeArgs', function() {
