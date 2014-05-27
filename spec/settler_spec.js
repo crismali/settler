@@ -194,7 +194,8 @@ describe('Settler', function() {
 
   describe('globalize', function() {
     beforeEach(function() {
-      Settler.globalize();
+      var globalize = Settler.globalize;
+      globalize();
     });
 
     afterEach(function() {
