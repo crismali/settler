@@ -19,13 +19,13 @@ describe('Settler', function() {
     expect(Settler).to.be.object;
   });
 
-  describe('lockArgs', function() {
-    var lockArgs;
+  describe('exactly', function() {
+    var exactly;
     var lockedFunc;
 
     beforeEach(function() {
-      lockArgs = Settler.lockArgs;
-      lockedFunc = lockArgs(3, noop);
+      exactly = Settler.exactly;
+      lockedFunc = exactly(3, noop);
     });
 
     it('returns a function that throws an error if the number of arguments is incorrect', function() {
@@ -43,7 +43,7 @@ describe('Settler', function() {
     it('executes the function in the appropriate context', function() {
       subject = {
         worked: false,
-        work: lockArgs(0, contextFunc)
+        work: exactly(0, contextFunc)
       };
       subject.work();
       expect(subject.worked).to.equal(true);
@@ -100,13 +100,13 @@ describe('Settler', function() {
     });
   });
 
-  describe('optionalArgs', function() {
-    var optionalArgs;
+  describe('between', function() {
+    var between;
 
     beforeEach(function() {
-      optionalArgs = Settler.optionalArgs;
-      obj = { subject: optionalArgs(2, 4, contextFunc) };
-      subject = optionalArgs(2, 4, noop);
+      between = Settler.between;
+      obj = { subject: between(2, 4, contextFunc) };
+      subject = between(2, 4, noop);
     });
 
     it('executes the function if the number of args is in range', function() {
@@ -134,13 +134,13 @@ describe('Settler', function() {
 
     it('throws an error if given less than 3 arguments', function() {
       expect(function() {
-        optionalArgs(1, 2);
+        between(1, 2);
       }).to.throw(/Expected 3 arguments, but received 2/);
     });
 
     it('throws an error if given more than 3 arguments', function() {
       expect(function() {
-        optionalArgs(1, 2, 3, 4);
+        between(1, 2, 3, 4);
       }).to.throw(/Expected 3 arguments, but received 4/);
     });
   });
@@ -341,9 +341,9 @@ describe('Settler', function() {
 
     afterEach(function() {
       [
-        'lockArgs',
+        'exactly',
         'multiFunction',
-        'optionalArgs',
+        'between',
         'defaultArgs',
         'normalizeArgs',
         'atMost',
@@ -355,9 +355,9 @@ describe('Settler', function() {
     });
 
     it('injects all settler functions into the global context', function() {
-      expect(window.lockArgs).to.equal(Settler.lockArgs);
+      expect(window.exactly).to.equal(Settler.exactly);
       expect(window.multiFunction).to.equal(Settler.multiFunction);
-      expect(window.optionalArgs).to.equal(Settler.optionalArgs);
+      expect(window.between).to.equal(Settler.between);
       expect(window.defaultArgs).to.equal(Settler.defaultArgs);
       expect(window.normalizeArgs).to.equal(Settler.normalizeArgs);
     });
