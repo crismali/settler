@@ -388,6 +388,42 @@ describe('Settler', function() {
     });
   });
 
+  describe('options', function() {
+    var options;
+    var args;
+
+    beforeEach(function() {
+      options = Settler.options;
+      subject = options(3, function() {
+        args = arguments;
+      });
+    });
+
+    it('throws an error when called with too few options', function() {
+      expect(function() { subject(1); }).to.throw(/Expected 2 to 3.*received 1/);
+    });
+
+    it('throws an error when called with too many options', function() {
+      expect(function() { subject(1, 2, 3, 4); }).to.throw(/Expected 2 to 3.*received 4/);
+    });
+
+    it('passes in an empty object as the last argument if no argument was provided', function() {
+      subject(1, 2);
+      expect(args[2]).to.be.like({});
+    });
+
+    it('allows the options object to be passed in', function() {
+      subject(1, 2, 3);
+      expect(args[2]).to.equal(3);
+    });
+
+    it('executes the function in the correct context', function() {
+      var obj = { subject: contextFunc };
+      obj.subject(1, 2);
+      expect(obj.worked).to.equal(true);
+    });
+  });
+
   describe('globalize', function() {
     beforeEach(function() {
       var globalize = Settler.globalize;
@@ -400,6 +436,8 @@ describe('Settler', function() {
         'multiFunction',
         'between',
         'defaultArgs',
+        'defaultsBetweeen',
+        'options',
         'normalizeArgs',
         'atMost',
         'atLeast',
@@ -414,7 +452,12 @@ describe('Settler', function() {
       expect(window.multiFunction).to.equal(Settler.multiFunction);
       expect(window.between).to.equal(Settler.between);
       expect(window.defaultArgs).to.equal(Settler.defaultArgs);
+      expect(window.defaultsBetweeen).to.equal(Settler.defaultsBetweeen);
+      expect(window.options).to.equal(Settler.options);
       expect(window.normalizeArgs).to.equal(Settler.normalizeArgs);
+      expect(window.atMost).to.equal(Settler.atMost);
+      expect(window.atLeast).to.equal(Settler.atLeast);
+      expect(window.arrayArgs).to.equal(Settler.arrayArgs);
     });
 
     it('does not inject the globalize method', function() {
