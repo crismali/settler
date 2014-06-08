@@ -284,7 +284,10 @@ describe('Settler', function() {
 
     beforeEach(function() {
       atLeast = Settler.atLeast;
-      subject = atLeast(2, contextFunc);
+      subject = atLeast(2, function() {
+        contextFunc.apply(this, arguments);
+        return true;
+      });
       obj = { subject: subject };
     });
 
@@ -304,6 +307,10 @@ describe('Settler', function() {
       obj.subject(1, 2);
       expect(obj.worked).to.equal(true);
     });
+
+    it('returns the return value of the function', function() {
+      expect(subject(1, 2)).to.equal(true);
+    });
   });
 
   describe('atMost', function() {
@@ -311,7 +318,10 @@ describe('Settler', function() {
 
     beforeEach(function() {
       atMost = Settler.atMost;
-      subject = atMost(2, contextFunc);
+      subject = atMost(2, function() {
+        contextFunc.apply(this, arguments);
+        return true;
+      });
       obj = { subject: subject };
     });
 
@@ -331,19 +341,22 @@ describe('Settler', function() {
       obj.subject(1, 2);
       expect(obj.worked).to.equal(true);
     });
+
+    it('returns the return value of the function', function() {
+      expect(subject(1, 2)).to.equal(true);
+    });
   });
 
   describe('defaultsBetween', function() {
     var defaultsBetweeen;
     var spy;
     var args;
-    var called;
 
     beforeEach(function() {
       defaultsBetweeen = Settler.defaultsBetweeen;
       spy = function() {
-        called = true;
         args = arguments;
+        return true;
       };
       var defaults = [5, function() { return { foo: 'bar' } }];
       subject = defaultsBetweeen(2, defaults, spy);
@@ -355,6 +368,10 @@ describe('Settler', function() {
 
     it('throws an error if passed too many arguments', function() {
       expect(function() { subject(1, 2, 3, 4, 5); }).to.throw(/Expected 2 to 4 .*received 5/);
+    });
+
+    it('returns the return value of the function', function() {
+      expect(subject(1, 2)).to.equal(true);
     });
 
     it('passes in default arguments where specified', function() {
@@ -396,6 +413,7 @@ describe('Settler', function() {
       options = Settler.options;
       subject = options(3, function() {
         args = arguments;
+        return true;
       });
     });
 
@@ -405,6 +423,10 @@ describe('Settler', function() {
 
     it('throws an error when called with too many options', function() {
       expect(function() { subject(1, 2, 3, 4); }).to.throw(/Expected 2 to 3.*received 4/);
+    });
+
+    it('returns the return value of the function', function() {
+      expect(subject(1, 2)).to.equal(true);
     });
 
     it('passes in an empty object as the last argument if no argument was provided', function() {
