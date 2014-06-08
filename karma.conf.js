@@ -5,7 +5,9 @@ module.exports = function(config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['mocha-debug', 'mocha', 'sinon-chai'],
     files: [
+      'node_modules/underscore/underscore.js',
       'spec/support/chai-literals.js',
+      'spec/support/chai-fuzzy.js',
       'dist/settler.js',
       'spec/**/*_spec.js'
     ],

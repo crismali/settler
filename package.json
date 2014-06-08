@@ -34,6 +34,7 @@
     "karma-safari-launcher": "^0.1.1",
     "karma-sinon-chai": "^0.1.5",
     "mocha": "^1.18.2",
-    "node-inspector": "^0.7.3"
+    "node-inspector": "^0.7.3",
+    "underscore": "^1.6.0"
   }
 }
