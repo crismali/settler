@@ -333,6 +333,61 @@ describe('Settler', function() {
     });
   });
 
+  describe('defaultsBetween', function() {
+    var defaultsBetweeen;
+    var spy;
+    var args;
+    var called;
+
+    beforeEach(function() {
+      defaultsBetweeen = Settler.defaultsBetweeen;
+      spy = function() {
+        called = true;
+        args = arguments;
+      };
+      var defaults = [5, function() { return { foo: 'bar' } }];
+      subject = defaultsBetweeen(2, defaults, spy);
+    });
+
+    it('throws an error if passed too few arguments', function() {
+      expect(function() { subject(1); }).to.throw(/Expected 2 to 4 .*received 1/);
+    });
+
+    it('throws an error if passed too many arguments', function() {
+      expect(function() { subject(1, 2, 3, 4, 5); }).to.throw(/Expected 2 to 4 .*received 5/);
+    });
+
+    it('passes in default arguments where specified', function() {
+      subject(1, 2);
+      expect(args[2]).to.equal(5);
+    });
+
+    it('invokes default functions and uses the result as the default', function() {
+      subject(1, 2, 3);
+      expect(args[2]).to.equal(3);
+      expect(args[3]).to.be.like({ foo: 'bar' });
+    });
+
+    describe('appropriate context', function() {
+      var obj;
+
+      beforeEach(function() {
+        obj = {};
+        obj.subject = defaultsBetweeen(1, [function(){ this.foo = true; }], contextFunc);
+      });
+
+      it('executes the passed in function', function() {
+        obj.subject(1);
+        expect(obj.foo).to.equal(true);
+      });
+
+      it('executes the default function', function() {
+        obj.subject(1, 2);
+        expect(obj.worked).to.equal(true);
+      });
+    });
+  });
+
   describe('globalize', function() {
     beforeEach(function() {
       var globalize = Settler.globalize;
