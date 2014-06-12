@@ -405,13 +405,13 @@ describe('Settler', function() {
     });
   });
 
-  describe('options', function() {
-    var options;
+  describe('withOptions', function() {
+    var withOptions;
     var args;
 
     beforeEach(function() {
-      options = Settler.options;
-      subject = options(3, function() {
+      withOptions = Settler.withOptions;
+      subject = withOptions(3, function() {
         args = arguments;
         return true;
       });
