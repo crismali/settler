@@ -446,6 +446,47 @@ describe('Settler', function() {
     });
   });
 
+  describe('justOptions', function() {
+    var justOptions;
+    var arg;
+
+    beforeEach(function() {
+      justOptions = Settler.justOptions;
+      subject = justOptions(function(options) {
+        arg = options;
+        return true;
+      });
+    });
+
+    it('throws an error when called with more than one arguments', function() {
+      expect(function() { subject(1, 2); }).to.throw(/Expected 0 to 1.*received 2/);
+    });
+
+    it('returns the return value of the function', function() {
+      expect(subject(1)).to.equal(true);
+    });
+
+    it('passes in an empty object as the argument if no argument was provided', function() {
+      subject();
+      expect(arg).to.be.like({});
+    });
+
+    it('allows the options object to be passed in', function() {
+      subject(1);
+      expect(arg).to.equal(1);
+    });
+
+    it('executes the function in the correct context', function() {
+      var obj = { subject: contextFunc };
+      obj.subject(1);
+      expect(obj.worked).to.equal(true);
+    });
+
+    it('is aliased to onlyOptions', function() {
+      expect(Settler.onlyOptions).to.equal(justOptions);
+    });
+  });
+
   describe('globalize', function() {
     beforeEach(function() {
       var globalize = Settler.globalize;
