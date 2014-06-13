@@ -21,22 +21,21 @@ describe('Settler', function() {
 
   describe('exactly', function() {
     var exactly;
-    var lockedFunc;
 
     beforeEach(function() {
       exactly = Settler.exactly;
-      lockedFunc = exactly(3, noop);
+      subject = exactly(3, noop);
     });
 
     it('returns a function that throws an error if the number of arguments is incorrect', function() {
       expect(function() {
-        lockedFunc('foo', 'bar');
+        subject('foo', 'bar');
       }).to.throw(/Expected 3 arguments, but received 2/);
     });
 
     it('executes the function when given the correct number of arguments', function() {
       expect(function() {
-        lockedFunc('foo', 'bar', 'baz');
+        subject('foo', 'bar', 'baz');
       }).to.not.throw();
     });
 
