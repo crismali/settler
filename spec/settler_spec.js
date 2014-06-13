@@ -29,28 +29,59 @@ describe('Settler', function() {
 
     beforeEach(function() {
       exactly = Settler.exactly;
-      subject = exactly(3, noop);
     });
 
-    it('returns a function that throws an error if the number of arguments is incorrect', function() {
-      expect(function() {
-        subject('foo', 'bar');
-      }).to.throw(/Expected 3 arguments, but received 2/);
+    describe('validator', function() {
+      beforeEach(function() {
+        subject = exactly;
+      });
+
+      it('no ops when given the correct arguments', function() {
+        expect(function() { subject(2, argify(1, 2)); }).to.not.throw();
+      });
+
+      it('returns undefined when given the correct number of arguments', function() {
+        expect(subject(1, argify(1))).to.be.undefined;
+      });
+
+      it('throws an error if fewer args are provided than the minimum', function() {
+        expect(function() {
+          subject(2, argify(1));
+        }).to.throw(/Expected 2 arguments, but received 1/);
+      });
+
+      it('throws an error if too many args are provided', function() {
+        expect(function() {
+          subject(2, argify(1, 2, 3));
+        }).to.throw(/Expected 2 arguments, but received 3/);
+      });
     });
 
-    it('executes the function when given the correct number of arguments', function() {
-      expect(function() {
-        subject('foo', 'bar', 'baz');
-      }).to.not.throw();
-    });
+    describe('wrapper function', function() {
+      beforeEach(function() {
+        subject = exactly(3, noop);
+      });
 
-    it('executes the function in the appropriate context', function() {
-      subject = {
-        worked: false,
-        work: exactly(0, contextFunc)
-      };
-      subject.work();
-      expect(subject.worked).to.equal(true);
+      it('returns a function that throws an error if the number of arguments is incorrect', function() {
+        expect(function() {
+          subject('foo', 'bar');
+        }).to.throw(/Expected 3 arguments, but received 2/);
+      });
+
+      it('executes the function when given the correct number of arguments', function() {
+        expect(function() {
+          subject('foo', 'bar', 'baz');
+        }).to.not.throw();
+      });
+
+      it('executes the function in the appropriate context', function() {
+        subject = {
+          worked: false,
+          work: exactly(0, contextFunc)
+        };
+        subject.work();
+        expect(subject.worked).to.equal(true);
+      });
     });
   });
 
