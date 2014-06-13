@@ -29,13 +29,16 @@ describe('Settler', function() {
 
     beforeEach(function() {
       exactly = Settler.exactly;
+      subject = exactly;
+    });
+
+    it('throws an error when passed neither a function or arguments', function() {
+      expect(function() {
+        subject(1, 3);
+      }).to.throw(/Expected arguments object or a function as the third argument but received a number/);
     });
 
     describe('validator', function() {
-      beforeEach(function() {
-        subject = exactly;
-      });
-
       it('no ops when given the correct arguments', function() {
         expect(function() { subject(2, argify(1, 2)); }).to.not.throw();
       });
