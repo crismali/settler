@@ -35,7 +35,7 @@ describe('Settler', function() {
     it('throws an error when passed neither a function or arguments', function() {
       expect(function() {
         subject(1, 3);
-      }).to.throw(/Expected arguments object or a function as the third argument but received a number/);
+      }).to.throw(/Expected arguments object or a function as its last argument but received a number/);
     });
 
     describe('validator', function() {
@@ -149,7 +149,7 @@ describe('Settler', function() {
     it('throws an error when passed neither a function or arguments', function() {
       expect(function() {
         subject(1, 2, 3);
-      }).to.throw(/Expected arguments object or a function as the third argument but received a number/);
+      }).to.throw(/Expected arguments object or a function as its last argument but received a number/);
     });
 
     describe('validator', function() {
@@ -358,32 +358,54 @@ describe('Settler', function() {
 
     beforeEach(function() {
       atLeast = Settler.atLeast;
-      subject = atLeast(2, function() {
-        contextFunc.apply(this, arguments);
-        return true;
-      });
-      obj = { subject: subject };
+      subject = atLeast;
     });
 
-    it('throws an error if too few arguments are given', function() {
-      expect(function() {
-        subject(1);
-      }).to.throw(/Expected at least 2 arguments, but received 1/);
-    });
-
-    it('does not throw an error if the minimum number of arguments is given', function() {
+    it('throws an error when passed neither a function or arguments', function() {
       expect(function() {
         subject(1, 2);
-      }).to.not.throw();
+      }).to.throw(/Expected arguments object or a function as its last argument but received a number/);
     });
 
-    it('executes the function in the correct context', function() {
-      obj.subject(1, 2);
-      expect(obj.worked).to.equal(true);
+    describe('validator', function() {
+      it('throws an error if too few arguments are given', function() {
+        expect(function() {
+          subject(2, argify(1));
+        }).to.throw(/Expected at least 2 arguments, but received 1/);
+      });
+
+      it('does not throw an error if the minimum number of arguments is given', function() {
+        expect(function() { subject(2, argify(1, 2)); }).to.not.throw();
+      });
     });
 
-    it('returns the return value of the function', function() {
-      expect(subject(1, 2)).to.equal(true);
+    describe('wrapper function', function() {
+      beforeEach(function() {
+        subject = atLeast(2, function() {
+          contextFunc.apply(this, arguments);
+          return true;
+        });
+        obj = { subject: subject };
+      });
+
+      it('throws an error if too few arguments are given', function() {
+        expect(function() {
+          subject(1);
+        }).to.throw(/Expected at least 2 arguments, but received 1/);
+      });
+
+      it('does not throw an error if the minimum number of arguments is given', function() {
+        expect(function() { subject(1, 2); }).to.not.throw();
+      });
+
+      it('executes the function in the correct context', function() {
+        obj.subject(1, 2);
+        expect(obj.worked).to.equal(true);
+      });
+
+      it('returns the return value of the function', function() {
+        expect(subject(1, 2)).to.equal(true);
+      });
     });
   });
 
