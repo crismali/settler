@@ -414,33 +414,58 @@ describe('Settler', function() {
 
     beforeEach(function() {
       atMost = Settler.atMost;
-      subject = atMost(2, function() {
-        contextFunc.apply(this, arguments);
-        return true;
-      });
-      obj = { subject: subject };
+      subject = atMost;
     });
 
-    it('throws an error if too many arguments are given', function() {
-      expect(function() {
-        subject(1, 2, 3);
-      }).to.throw(/Expected at most 2 arguments, but received 3/);
-    });
-
-    it('does not throw an error if the maximum number of arguments is given', function() {
+    it('throws an error when passed neither a function or arguments', function() {
       expect(function() {
         subject(1, 2);
-      }).to.not.throw();
+      }).to.throw(/Expected arguments object or a function as its last argument but received a number/);
     });
 
-    it('executes the function in the correct context', function() {
-      obj.subject(1, 2);
-      expect(obj.worked).to.equal(true);
+    describe('validator', function() {
+      it('throws an error if too many arguments are given', function() {
+        expect(function() {
+          subject(2, argify(1, 2, 3));
+        }).to.throw(/Expected at most 2 arguments, but received 3/);
+      });
+
+      it('does not throw an error if the maximum number of arguments is given', function() {
+        expect(function() { subject(2, argify(1, 2)); }).to.not.throw();
+      });
     });
 
-    it('returns the return value of the function', function() {
-      expect(subject(1, 2)).to.equal(true);
+    describe('wrapper function', function() {
+      beforeEach(function() {
+        subject = atMost(2, function() {
+          contextFunc.apply(this, arguments);
+          return true;
+        });
+        obj = { subject: subject };
+      });
+
+      it('throws an error if too many arguments are given', function() {
+        expect(function() {
+          subject(1, 2, 3);
+        }).to.throw(/Expected at most 2 arguments, but received 3/);
+      });
+
+      it('does not throw an error if the maximum number of arguments is given', function() {
+        expect(function() {
+          subject(1, 2);
+        }).to.not.throw();
+      });
+
+      it('executes the function in the correct context', function() {
+        obj.subject(1, 2);
+        expect(obj.worked).to.equal(true);
+      });
+
+      it('returns the return value of the function', function() {
+        expect(subject(1, 2)).to.equal(true);
+      });
     });
+
   });
 
   describe('defaultsBetween', function() {
