@@ -608,6 +608,44 @@ describe('Settler', function() {
     });
   });
 
+  describe('strictlyTyped', function() {
+    var strictlyTyped;
+    beforeEach(function() {
+      strictlyTyped = Settler.strictlyTyped;
+      subject = strictlyTyped;
+    });
+
+    describe('validator', function() {
+      it('throws an error when given the wrong type of argument', function() {
+        expect(function() {
+          subject([Object], argify([]));
+        }).to.throw(/wrong type error/);
+      });
+
+      it('does not throw an error when given the correct type of argument', function() {
+        expect(function() { subject([Object, String, Number], argify({}, '', 0)); }).to.not.throw();
+      });
+
+      it('throws an error when given undefined', function() {
+        expect(function() {
+          subject([Object], argify(undefined));
+        }).to.throw(/wrong type error/);
+      });
+
+      it('throws an error when given null', function() {
+        expect(function() {
+          subject([Object], argify(null));
+        }).to.throw(/wrong type error/);
+      });
+
+      it('throws an error when given NaN', function() {
+        expect(function() {
+          subject([Number], argify(NaN));
+        }).to.throw('wrong type error');
+      });
+    });
+  });
+
   describe('globalize', function() {
     beforeEach(function() {
       var globalize = Settler.globalize;
