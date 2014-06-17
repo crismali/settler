@@ -465,7 +465,6 @@ describe('Settler', function() {
         expect(subject(1, 2)).to.equal(true);
       });
     });
-
   });
 
   describe('defaultsBetween', function() {
@@ -616,10 +615,22 @@ describe('Settler', function() {
     });
 
     describe('validator', function() {
+      it('throws an error when given less types than arguments', function() {
+        expect(function() {
+          subject([Number, Array], argify(1));
+        }).to.throw(/Expected 2 arguments, but received 1/);
+      });
+
+      it('throws an error when given more/less types than arguments', function() {
+        expect(function() {
+          subject([Number, Array], argify(1, 2, 3));
+        }).to.throw(/Expected 2 arguments, but received 3/);
+      });
+
       it('throws an error when given the wrong type of argument', function() {
         expect(function() {
-          subject([Object], argify([]));
-        }).to.throw(/wrong type error/);
+          subject([Number, Object], argify(5, []));
+        }).to.throw(/Expected Object, but received Array as the 2nd argument/);
       });
 
       it('does not throw an error when given the correct type of argument', function() {
@@ -629,19 +640,25 @@ describe('Settler', function() {
       it('throws an error when given undefined', function() {
         expect(function() {
           subject([Object], argify(undefined));
-        }).to.throw(/wrong type error/);
+        }).to.throw(/Expected Object, but received undefined as the 1st argument/);
       });
 
       it('throws an error when given null', function() {
         expect(function() {
           subject([Object], argify(null));
-        }).to.throw(/wrong type error/);
+        }).to.throw(/Expected Object, but received null as the 1st argument/);
       });
 
       it('throws an error when given NaN', function() {
         expect(function() {
           subject([Number], argify(NaN));
-        }).to.throw('wrong type error');
+        }).to.throw('Expected Number, but received NaN as the 1st argument');
+      });
+
+      it('throws a useful error when given unnamed types', function() {
+        expect(function() {
+          subject([function(){}], argify(new function(){}));
+        }).to.throw(/Expected Unnamed Type, but received Unnamed Type as the 1st argument/);
       });
     });
   });
