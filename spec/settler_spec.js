@@ -661,6 +661,46 @@ describe('Settler', function() {
         }).to.throw(/Expected Unnamed Type, but received Unnamed Type as the 1st argument/);
       });
     });
+
+    describe('wrapper function', function() {
+      beforeEach(function() {
+        subject = strictlyTyped([Number, Array], noop);
+      });
+
+      it('throws an error when given less types than arguments', function() {
+        expect(function() {
+          subject(1);
+        }).to.throw(/Expected 2 arguments, but received 1/);
+      });
+
+      it('throws an error when given more/less types than arguments', function() {
+        expect(function() {
+          subject(1, 2, 3);
+        }).to.throw(/Expected 2 arguments, but received 3/);
+      });
+
+      it('throws an error when given the wrong type of argument', function() {
+        expect(function() {
+          subject(5, {});
+        }).to.throw(/Expected Array, but received Object as the 2nd argument/);
+      });
+
+      it('does not throw an error when given the correct type of argument', function() {
+        expect(function() { subject(5, []); }).to.not.throw();
+      });
+
+      it('executes the function in the correct context', function() {
+        subject = strictlyTyped([Object], contextFunc);
+        var obj = { subject: subject };
+        obj.subject({});
+        expect(obj.worked).to.equal(true);
+      });
+
+      it('returns the return value of the function', function() {
+        subject = strictlyTyped([Object], function() { return 5; });
+        expect(subject({})).to.equal(5);
+      });
+    });
   });
 
   describe('globalize', function() {
