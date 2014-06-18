@@ -20,6 +20,10 @@ describe('Settler', function() {
     };
   });
 
+  afterEach(function() {
+    window.worked = false;
+  });
+
   it('is an object', function() {
     expect(Settler).to.be.object;
   });
